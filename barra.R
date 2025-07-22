@@ -1,15 +1,19 @@
 ##########stock assessment of S. putnamae######
-##############set dictionary and load data########
-setwd("D:/Vinoth")
-mydata<-read.csv("Putnamae_data.csv") 
-head(mydata1)
 
+#_____________________________________________________________________________________________
+###### Packages ##########
+#_____________________________________________________________________________________________
 library(dplyr)
 library(TropFishR)
 library(ks)
 library(ggplot2)
 
-##########data arrangement#########
+#_____________________________________________________________________________________________
+###### Data & L-F arrangement ##########
+#_____________________________________________________________________________________________
+setwd("D:/")
+mydata<-read.csv("Putnamae_data.csv") 
+head(mydata1)
 mydata1<- mydata[3:4]
 colnames(mydata1)<-c("date","length")
 head(mydata1)
@@ -44,8 +48,10 @@ putname5_ma9<-lfqRestructure(putname5, MA=9)
 plot(putname5_ma7,hist.sc = 0.75)
 plot(putname5_ma7, Fname = "rcounts")
 
+#_____________________________________________________________________________________________
+###### Linf and K estimation ##########
+#_____________________________________________________________________________________________
 
-###############Linf and K#######
 ####### Powell Wetherall plot
 par(mfcol = c(1,1))
 PW <- powell_wetherall(param = putname5_ma7,
@@ -124,9 +130,11 @@ putname5_1$t_anchor<-0.98
 putname5_1$phiL<-3.67
 class(putname5_1) <- "lfq"
 
-#################Estimate M,F,Z,E ################
+#_____________________________________________________________________________________________
+###### Estimate mortality & E ##########
+#_____________________________________________________________________________________________
+
 # estimation of M
-?M_empirical
 tmax=t0+3/putname5_1$K
 tmax1<- res_SA$agemax
 
@@ -182,9 +190,10 @@ putname5_2$a<-0.018
 putname5_2$b<-2.632
 str(putname5_2)
 
-##########VPA###################
+#_____________________________________________________________________________________________
+###### Estimate VPA ##########
+#_____________________________________________________________________________________________
 set.seed(1000)
-
 vpa <- VPA(param = putname5_2,catch_columns = 1:ncol(putname5_2$catch), 
            terminalF = putname5_2$currF, terminalE = 0.5,analysis_type = "VPA", plot=T)
 vpa
@@ -193,7 +202,10 @@ vpa
 VPA(param = putname5_2,catch_columns = 1:ncol(putname5_2$catch), 
     terminalF = putname5_2$currF, terminalE = 0.5,analysis_type = "VPA", plot=T)
 dev.off()
-###########Thompsen and bell#############
+
+#_____________________________________________________________________________________________
+###### TB model ##########
+#_____________________________________________________________________________________________
 vpa$FM_calc
 putname5_2$FM<-vpa$FM_calc
 
@@ -234,4 +246,6 @@ TB1$df_Es
 
 # Current yield and biomass levels
 TB1$currents
-
+#_____________________________________________________________________________________________
+###### THE END ##########
+#_____________________________________________________________________________________________
